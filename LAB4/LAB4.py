@@ -1,24 +1,25 @@
-#import des librairies l'environnement
-import pandas as pd
 import numpy as np
-import sklearn.metrics as sm
-import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
-from sklearn import datasets
+import pandas as pd
+from sklearn.datasets import load_iris
 
-#chargement de base de données iris
-iris = datasets.load_iris()
+iris = load_iris()
 
-"""#affichage des données
-print(iris)
-print(iris.data)
-print(iris.feature_names)
-print(iris.target)
-print(iris.target_names)"""
 
-#Stocker les données en tant que DataFrame Pandas 
-x=pd.DataFrame(iris.data)
-# définir les noms de colonnes
-x.columns=['Sepal_Length','Sepal_width','Petal_Length','Petal_width']
-y=pd.DataFrame(iris.target)
-print(y.columns==['Targets'])
+#Exercice 1
+
+#1
+df= pd.DataFrame(data= np.c_[iris['data'], iris['target']],
+                 columns= iris['feature_names'] + ['target'])
+
+df['species'] = pd.Categorical.from_codes(iris.target, iris.target_names)
+
+
+#2
+S = []
+for i in range(1,150):
+    S.append(df['species'][i])
+S1 = set(S)
+S1 = list(S1)
+S1.sort()
+
+print(S1)
