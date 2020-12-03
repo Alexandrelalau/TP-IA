@@ -21,5 +21,9 @@ for i in range(1,150):
 S1 = set(S)
 S1 = list(S1)
 S1.sort()
-
 print(S1)
+print(df.columns)
+df.drop('species',1,inplace=True)
+print(df.columns)
+
+#3
