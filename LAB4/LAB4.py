@@ -9,10 +9,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn import metrics
 from sklearn.metrics.pairwise import euclidean_distances 
 
-
-
-
-
 iris = load_iris()
 #Exercice A
 
@@ -106,44 +102,18 @@ de visualisations et de travaux. Mais il peut s'avérer moins précis et pertina
 
 #Exercice B
 #1
-"""
-def TNN(original_data, data_finish):
-    data_test = original_data  
+def TNN(data_train, target):
+    data_test = data_train 
     neighbors=1
     prediction = []    
-    distance_test_train = euclidean_distances(data_test, original_data)  
-    print('cc')
-    print(distance_test_train)
-    print('ccc')
-    for test_elt_index in range(distance_test_train.shape[0]):
+    distance_test_train = euclidean_distances(data_test, data_train)    
+    for test_elt_index in range(distance_test_train.shape[0]):        
         distance_test_elt_train = distance_test_train[test_elt_index]        
-        n_nearest_neighbor_indexes = distance_test_elt_train.argsort()[:neighbors]  
-        labels_of_neighors = [data_finish[i] for i in n_nearest_neighbor_indexes]    
-        elt_pred = max(labels_of_neighors, key = labels_of_neighors.count)     
-        prediction.append(elt_pred)
+        n_nearest_neighbor_indexes = distance_test_elt_train.argsort()[:neighbors]        
+        labels_of_neighors = [target[i] for i in n_nearest_neighbor_indexes]        
+        elt_pred = max(labels_of_neighors, key = labels_of_neighors.count)        
+        prediction.append(elt_pred)    
     prediction = np.array(prediction)
-"""
-def TNN(data_train, target, neighbors=1, data_test = []):
-    if data_test == []:
-        data_test = data_train
-    prediction = []  
-    #distance between data_test and data_train
-    distance_test_train = euclidean_distances(data_test, data_train)
-    
-    for test_elt_index in range(distance_test_train.shape[0]):
-        #
-        distance_test_elt_train = distance_test_train[test_elt_index]
-        
-        n_nearest_neighbor_indexes = distance_test_elt_train.argsort()[:neighbors]
-
-        labels_of_neighors = [target[i] for i in n_nearest_neighbor_indexes]
-        
-        elt_pred = max(labels_of_neighors, key = labels_of_neighors.count)
-        
-        prediction.append(elt_pred)
-    
-    prediction = np.array(prediction)
-
-S = [1, 2, 1, 4, 6, 2, 2, 4, 5, 2]
-S1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-TNN(df, S1, 1, data_test= [])
+    print(prediction)
+S.append('setosa')
+TNN(df, S)
