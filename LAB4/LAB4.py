@@ -1,38 +1,23 @@
 import numpy as np
 import pandas as pd
 from sklearn.datasets import load_iris
-from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from sklearn import decomposition
-from sklearn import datasets
 import matplotlib.pyplot as plt
 from sklearn import datasets
-from sklearn.decomposition import PCA
-import pandas as pd
-import numpy as np
-import sklearn.metrics as sm
-import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
-from sklearn import datasets
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+
 
 
 iris = load_iris()
-
-
-#Exercice 1
+#Exercice A
 
 #1
 df= pd.DataFrame(data= np.c_[iris['data'], iris['target']],
                  columns= iris['feature_names'] + ['target'])
-
 df['species'] = pd.Categorical.from_codes(iris.target, iris.target_names)
-
-
-df_iris = df
+X = iris.data
+Y = iris.target
+#appelé df et non data
 
 #2
 S = []
@@ -41,12 +26,14 @@ for i in range(1,150):
 S1 = set(S)
 S1 = list(S1)
 S1.sort()
-print(S1)
-print(df.columns)
+#print(df)
+#print(df.columns)
 df.drop('species',1,inplace=True)
+print(S1)
 print(df.columns)
 
 #3
+#3.1 PCA
 X = iris.data
 y = iris.target
 target_names = iris.target_names
@@ -60,6 +47,8 @@ for color, i, target_name in zip(colors, [0, 1, 2], target_names):
 plt.legend(loc='best', shadow=False, scatterpoints=1)
 plt.title('PCA of IRIS dataset')
 plt.show()
+
+#3.2 
 
 #4
 #J'ai préféré décomposé le travail que de directement faire cl=kmeans(data,nbclusters).
@@ -85,4 +74,23 @@ plt.show()
 plt.scatter(x.Petal_Length, x.Petal_width,c=colormap[model.labels_],s=40)
 plt.title('Classification K-means ')
 plt.show()
+
+#5
+"""Nous remarquons que lorsque nous effectuons le code plusieurs fois, les graphiques différaient 
+un peu quant au choix des clusters même si visuellement le graphique reste inchangé. 
+Cela vient de la manière dont la fonction K-mean est construite"""
+
+#6
+
+
+
+#Exercice B
+
+
+#CBN (X, Y)
+
+
+#Exercice C
+
+ 
 
