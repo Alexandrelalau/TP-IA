@@ -102,17 +102,17 @@ de visualisations et de travaux. Mais il peut s'avérer moins précis et pertina
 
 #Exercice B
 #1
-def TNN(data_train, target):
-    data_test = data_train 
-    neighbors=1
-    prediction = []    
-    distance_test_train = euclidean_distances(data_test, data_train)    
-    for test_elt_index in range(distance_test_train.shape[0]):        
-        distance_test_elt_train = distance_test_train[test_elt_index]        
-        n_nearest_neighbor_indexes = distance_test_elt_train.argsort()[:neighbors]        
-        labels_of_neighors = [target[i] for i in n_nearest_neighbor_indexes]        
-        elt_pred = max(labels_of_neighors, key = labels_of_neighors.count)        
-        prediction.append(elt_pred)    
+def TNN(data, dataf):
+    prediction = [] 
+    voisins=1 
+    distance = euclidean_distances(data, data)    
+    for j in range(distance.shape[0]):        
+        distance_e = distance[j]        
+        proche_voisin = distance_e.argsort()[:voisins]        
+        labels_voisins = [dataf[i] for i in proche_voisin]   
+        #predic = np.argmax(labels_voisins, axis=None, out=None) avec argmax le resultat est nul, l'utilisation de max est plus simple
+        predic = max(labels_voisins, key = labels_voisins.count)  
+        prediction.append(predic)    
     prediction = np.array(prediction)
     print(prediction)
 S.append('setosa')
