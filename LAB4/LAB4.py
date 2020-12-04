@@ -103,17 +103,76 @@ de visualisations et de travaux. Mais il peut s'avérer moins précis et pertina
 #Exercice B
 #1
 def TNN(data, dataf):
+    #création de liste vide
     prediction = [] 
+    #travail sur un voisin (nous effecturons pas la suite avec des val. diff.)
     voisins=1 
-    distance = euclidean_distances(data, data)    
+    #On étable la distance existance entre notre jeu de donnée inital et "cible"
+    distance = euclidean_distances(data, data)   
     for j in range(distance.shape[0]):        
-        distance_e = distance[j]        
-        proche_voisin = distance_e.argsort()[:voisins]        
+        distance_e = distance[j] 
+        #on retourne les proches voisins avec agsort
+        proche_voisin = distance_e.argsort()[:voisins] 
         labels_voisins = [dataf[i] for i in proche_voisin]   
-        #predic = np.argmax(labels_voisins, axis=None, out=None) avec argmax le resultat est nul, l'utilisation de max est plus simple
-        predic = max(labels_voisins, key = labels_voisins.count)  
-        prediction.append(predic)    
+        #predic = np.argmax(labels_voisins, axis=None, out=None) //avec argmax le resultat est nul, l'utilisation de max est plus simple
+        predic = max(labels_voisins, key = labels_voisins.count)
+        #On met dans notre liste de prediction les valeurs trouvés
+        prediction.append(predic) 
+    #renvoie les predictions
+    prediction = np.array(prediction)
+    print(prediction)
+    
+#2
+def TNN2(data, dataf):
+    #création de liste vide
+    predictione = [] 
+    #travail sur un voisin (nous effecturons pas la suite avec des val. diff.)
+    voisins=1 
+    #On étable la distance existance entre notre jeu de donnée inital et "cible"
+    distance = euclidean_distances(data, data)   
+    for j in range(distance.shape[0]):        
+        distance_e = distance[j] 
+        #on retourne les proches voisins avec agsort
+        proche_voisin = distance_e.argsort()[:voisins] 
+        labels_voisins = [dataf[i] for i in proche_voisin]   
+        #predic = np.argmax(labels_voisins, axis=None, out=None) //avec argmax le resultat est nul, l'utilisation de max est plus simple
+        predic = max(labels_voisins, key = labels_voisins.count)
+        #On met dans notre liste de prediction les valeurs trouvés
+        predictione.append(predic) 
+    #renvoie les predictions
+    predictione = np.array(predictione)
+    print(predictione)
+    
+#3
+"""
+S.append('setosa')
+TNN(df, S)"""
+
+#4
+
+
+#BONUS
+def TNNBONUS(data, dataf, voisins=22):
+    #création de liste vide
+    prediction = [] 
+    #travail sur un voisin (nous effecturons pas la suite avec des val. diff.)
+    #On étable la distance existance entre notre jeu de donnée inital et "cible"
+    distance = euclidean_distances(data, data)   
+    for j in range(distance.shape[0]):        
+        distance_e = distance[j] 
+        #on retourne les proches voisins avec agsort
+        proche_voisin = distance_e.argsort()[:voisins] 
+        labels_voisins = [dataf[i] for i in proche_voisin]   
+        #predic = np.argmax(labels_voisins, axis=None, out=None) //avec argmax le resultat est nul, l'utilisation de max est plus simple
+        predic = max(labels_voisins, key = labels_voisins.count)
+        #On met dans notre liste de prediction les valeurs trouvés
+        prediction.append(predic) 
+    #renvoie les predictions
     prediction = np.array(prediction)
     print(prediction)
 S.append('setosa')
-TNN(df, S)
+TNNBONUS(df, S)
+
+#Exercice C
+#1
+
