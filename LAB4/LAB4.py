@@ -6,8 +6,12 @@ import matplotlib.pyplot as plt
 from sklearn import datasets
 from sklearn.cluster import KMeans
 from sklearn.naive_bayes import GaussianNB
-from sklearn import metrics
 from sklearn.metrics.pairwise import euclidean_distances 
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import accuracy_score
+import warnings
 
 iris = load_iris()
 #Exercice A
@@ -16,6 +20,7 @@ iris = load_iris()
 df= pd.DataFrame(data= np.c_[iris['data'], iris['target']],
                  columns= iris['feature_names'] + ['target'])
 df['species'] = pd.Categorical.from_codes(iris.target, iris.target_names)
+Iris = df #exC
 #appelé df et non data
 
 #2
@@ -120,39 +125,48 @@ def TNN(data, dataf):
         prediction.append(predic) 
     #renvoie les predictions
     prediction = np.array(prediction)
-    print(prediction)
+    print(prediction) 
     
 #2
-def TNN2(data, dataf):
-    #création de liste vide
-    predictione = [] 
-    #travail sur un voisin (nous effecturons pas la suite avec des val. diff.)
-    voisins=1 
-    #On étable la distance existance entre notre jeu de donnée inital et "cible"
-    distance = euclidean_distances(data, data)   
-    for j in range(distance.shape[0]):        
-        distance_e = distance[j] 
-        #on retourne les proches voisins avec agsort
-        proche_voisin = distance_e.argsort()[:voisins] 
-        labels_voisins = [dataf[i] for i in proche_voisin]   
-        #predic = np.argmax(labels_voisins, axis=None, out=None) //avec argmax le resultat est nul, l'utilisation de max est plus simple
-        predic = max(labels_voisins, key = labels_voisins.count)
-        #On met dans notre liste de prediction les valeurs trouvés
-        predictione.append(predic) 
-    #renvoie les predictions
-    predictione = np.array(predictione)
-    print(predictione)
-    
+#prends en entrée les labels prédit et existant et donne le p. pas prédit  
+def TNNE(data, dataf):
+	correct = 0
+	for i in range(len(data)):
+		if data[i] == dataf[i]:
+			correct += 1
+	return 100 - (correct / float(len(data)) * 100.0)
+  
 #3
-"""
-S.append('setosa')
-TNN(df, S)"""
+#S.append('setosa')
+#TNN(df, S)
 
 #4
-
+warnings.filterwarnings("ignore") #to remove unwanted warnings
+x=df.iloc[1:,:3]#features
+y=df.iloc[1:,4:]#class labels
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2)
+#test_size determines the percentage of test data you want here
+#train=80% and test=20% data is randomly split
+cv_scores = []
+neighbors = list(np.arange(3,50,2))
+for n in neighbors:
+    knn = KNeighborsClassifier(n_neighbors = n,algorithm = 'brute')
+    
+    cross_val = cross_val_score(knn,x_train,y_train,cv = 5 , scoring = 'accuracy')
+    cv_scores.append(cross_val.mean())
+    
+error = [1-x for x in cv_scores]
+optimal_n = neighbors[ error.index(min(error)) ]
+knn_optimal = KNeighborsClassifier(n_neighbors = optimal_n,algorithm = 'brute')
+knn_optimal.fit(x_train,y_train)
+pred = knn_optimal.predict(x_test)
+acc = accuracy_score(y_test,pred)*100
+print("Pour k = {0} , la précison est de {1}".format(optimal_n,acc))
+"""Lorsqu'on a K=1 les resultats sont similaires et lorsque le nombre de
+ voisins augmente la précison augmente"""
 
 #BONUS
-def TNNBONUS(data, dataf, voisins=22):
+def TNNBONUS(data, dataf, voisins=1):
     #création de liste vide
     prediction = [] 
     #travail sur un voisin (nous effecturons pas la suite avec des val. diff.)
@@ -170,9 +184,47 @@ def TNNBONUS(data, dataf, voisins=22):
     #renvoie les predictions
     prediction = np.array(prediction)
     print(prediction)
-S.append('setosa')
-TNNBONUS(df, S)
+
 
 #Exercice C
 #1
+def CBN(data, dataf):
+    #création de liste vide
+    prediction = [] 
+    #travail sur un voisin (nous effecturons pas la suite avec des val. diff.)
+    voisins=1 
+    #On étable la distance existance entre notre jeu de donnée inital et "cible"
+    distance = euclidean_distances(data, data)   
+    for j in range(distance.shape[0]):        
+        distance_e = distance[j] 
+        #on retourne les proches voisins avec agsort
+        proche_voisin = distance_e.argsort()[:voisins] 
+        labels_voisins = [dataf[i] for i in proche_voisin]   
+        #predic = np.argmax(labels_voisins, axis=None, out=None) //avec argmax le resultat est nul, l'utilisation de max est plus simple
+        predic = max(labels_voisins, key = labels_voisins.count)
+        #On met dans notre liste de prediction les valeurs trouvés
+        prediction.append(predic) 
+    #renvoie les predictions
+    prediction = np.array(prediction)
+    print(prediction) 
+ 
+#2
+def CBNE(data, dataf):
+	correct = 0
+	for i in range(len(data)):
+		if data[i] == dataf[i]:
+			correct += 1
+	return 100 - (correct / float(len(data)) * 100.0)
+
+
+#3
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
+gnb = GaussianNB()
+y_pred = gnb.fit(X_train, y_train).predict(X_test)
+print('Pourcentage de points mal étiquetés et Nombre de points mal étiqueté')
+print((X_test.shape[0], (y_test != y_pred).sum()))
+#Nombre de points mal étiquetés en % + le nombre de points mal étiqueté
+
+
 
