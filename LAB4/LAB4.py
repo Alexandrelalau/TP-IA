@@ -18,16 +18,14 @@ from math import exp
 from math import pi
 
 #Exercice A
-#1
-
+#1 - Ouverture de Iris
 iris = load_iris()
 df= pd.DataFrame(data= np.c_[iris['data'], iris['target']],
                  columns= iris['feature_names'] + ['target'])
 df['species'] = pd.Categorical.from_codes(iris.target, iris.target_names)
 Iris = df #exC
-#appelé df et non data
 
-#2
+#2 - Travail sur la dernière colonne 
 S = []
 for i in range(1,150):
     S.append(df['species'][i])
@@ -38,7 +36,8 @@ df.drop('species',1,inplace=True)
 print(S1)
 print(df.columns)
 
-#3
+#3 - Représentation graphique des données avec PCA
+#les données peojetées sont appelées X_r et non X
 X = iris.data
 y = iris.target
 target_names = iris.target_names
@@ -50,10 +49,12 @@ for color, i, target_name in zip(colors, [0, 1, 2], target_names):
     plt.scatter(X_r[y == i, 0], X_r[y == i, 1], color=color, alpha=.8, lw=lw,
                 label=target_name)
 plt.legend(loc='best', shadow=False, scatterpoints=1)
-plt.title('PCA of IRIS dataset')
+plt.title('PCA du jeu de données IRIS')
 plt.show()
 
-#4
+#4 - Représentation graphiques des données avec Kmeans pour les données projetées et initales 
+
+#4.1 - Avec le jeu de données projeté X_r et les centroides 
 #J'ai préféré décomposé le travail que de directement faire cl=kmeans(data,nbclusters).
 iris = datasets.load_iris()
 #importer le jeu de données Iris dataset à l'aide du module pandas
@@ -64,46 +65,46 @@ y.columns = ['Targets']
 #Création d'un objet K-Means avec un regroupement en 3 clusters (groupes)
 model=KMeans(n_clusters=3)
 #application du modèle sur notre jeu de données Iris
-model.fit(x)
+model.fit(X_r)
 colormap=np.array(['Red','green','blue'])
 iris = sns.load_dataset('iris')
 Species = iris.iloc[:,4] ; colors = Species.astype('category') 
 #Visualisation des clusters formés par K-Means
-plt.scatter(x.Petal_Length, x.Petal_width,c=colormap[model.labels_],s=40)
-#Centroid en Jaune
+plt.scatter(X_r[:, 0], X_r[:, 1],c=colormap[model.labels_],s=40)
 plt.scatter(model.cluster_centers_[:, 0], model.cluster_centers_[:,1], s = 100, c = 'yellow', label = 'Centroids')
-plt.title('K-mean pour le jeu de données IRIS avec centroids en jaune')
+plt.title('K-mean pour le jeu de données projeté et les centroides en jaune')
+plt.show()
+
+#4.2 (pour la question 7) - Avec le jeu de données inital et les centroides 
+model.fit(x)
+plt.scatter(x.Petal_Length, x.Petal_width,c=colormap[model.labels_],s=40)
+plt.scatter(model.cluster_centers_[:, 2], model.cluster_centers_[:,3], s = 100, c = 'yellow', label = 'Centroids')
+plt.title('K-mean pour le jeu de données initial et les centroides en jaune')
 plt.show()
 
 
-#5
+#5 - Modifications sur les graphes Kmean 
 """Nous remarquons que lorsque nous effectuons le code plusieurs fois, les graphiques différaient 
 un peu quant au choix des clusters. Cela vient de la manière dont la fonction K-mean est construite"""
 
-#6
-# Tracer le scatter plot
+#6 - Tracer les labels 
 plt.scatter(iris.iloc[:,1],iris.iloc[:,2],c=colors.cat.codes)
 plt.title('Représentation graphique des fleurs')
 plt.show()
-"""Les resultats obtenus sont différents car les méthodes de représentationd graphique sont différents. Il existe néamoins 
+
+
+"""Les resultats obtenus sont différents car les méthodes de représentationd graphique sont différentes. Il existe néamoins 
 toujours le même nombre de clusters relatifs aux trois espèces de fleur"""
 
 
-#7
-"""
-ATTENTION LES REPRESENTATIONS ONT ETE FAITES AVEC DF ET LES VALEURS PROJETES MAIS NOUS AVONS LAISSE DF 
-
-
-Lorsque nous effectuons les questions de kmean avec des valeurs projetés ou les valeurs "initials",
-les représentations graphiques sont différentes, ainsi que les clusters obtenus.
-- Les valeurs projetés savèrent plus présices surtout sur des exemples en particulier mais elles 
-peuvent être sujet à moins de modifications et de travaux.
-- Le travail sur le jeu de données initial est intéressant quand il faut effectué plusieurs types 
-de visualisations et de travaux. Mais il peut s'avérer moins précis et pertinant."""
+#7 - Modifications entre les données projetés et les données initiales
+"""Lorsque nous effectuons les représentations graphiques avec des valeurs projetées ou les valeurs "initiales",
+les représentations graphiques sont différentes, surtout au niveau de l'échelle des graphes et des valeurs 
+utilisées. Ce qui s'explique car les deux jeux de données sont différents"""
 
 
 #Exercice B
-#1
+#1 - Creation de TNN
 def TNN(data, dataf):
     #création de liste vide
     prediction = [] 
@@ -123,7 +124,7 @@ def TNN(data, dataf):
     prediction = np.array(prediction)
     print(prediction)
 
-#2
+#2 - Creation de TNNE
 def TNNE(data, dataf):
     correct = 0
     prediction = [] 
@@ -140,14 +141,13 @@ def TNNE(data, dataf):
             correct += 1
     return 100 - (correct / float(len(dataf)) * 100.0)
 
-#3
-#print(iris.target)
+#3 - Test sur IRIS
 iris = load_iris()
-print(TNNE(iris.data, iris.target))
 print(TNN(iris.data, iris.target))
-#En utilidsant la fonction TNNE, pour les données df, les résultats sont cohérents  
+print(TNNE(iris.data, iris.target))
+#En utilidsant les fonctions TNN et TNNE, pour les données IRIS, les résultats sont cohérents  
 
-#4
+#4 - Utilisation de sklearn
 warnings.filterwarnings("ignore") #to remove unwanted warnings
 x=df.iloc[1:,:3]#features
 y=df.iloc[1:,4:]#class labels
@@ -168,13 +168,13 @@ knn_optimal = KNeighborsClassifier(n_neighbors = optimal_n,algorithm = 'brute')
 knn_optimal.fit(x_train,y_train)
 pred = knn_optimal.predict(x_test)
 acc = accuracy_score(y_test,pred)*100
-print("le k est fixé aléatoirement, pour en avoir un autre, veuillez relancer le programme")
 print("Pour k = {0} , la précison est de {1}".format(optimal_n,acc))
+"""le k est fixé aléatoirement, pour en avoir un autre, veuillez relancer le programme
 
-"""Lorsqu'on a K=1 les resultats sont similaires et lorsque le nombre de
+Lorsqu'on a K=1 les resultats sont similaires et lorsque le nombre de
  voisins augmente la précison augmente"""
 
-#BONUS
+#BONUS - TNNE avec le choix concernant les voisins 
 def TNNBONUS(data, dataf, voisins=1):
     #création de liste vide
     prediction = [] 
@@ -196,7 +196,10 @@ def TNNBONUS(data, dataf, voisins=1):
 
 
 #Exercice C
-#1
+
+#Si vous voulez tester l'algorithme, assurez vous d'avoir bien importer les librairies et d'avoir la bonne version de python (2.7)
+
+#1 - Creantion de CBN
 # On casse le jeu de données par valeurs de "class"
 def separate_by_class(dataset):
 	separated = dict()
@@ -232,7 +235,7 @@ def summarize_by_class(dataset):
 		summaries[class_value] = summarize_dataset(rows)
 	return summaries
 
-
+# Calculer la fonction de distribution de probabilité gaussienne pour x
 def calculate_probability(x, mean, stdev):
 	exponent = exp(-((x-mean)**2 / (2 * stdev**2 )))
 	return (1 / (sqrt(2 * pi) * stdev)) * exponent
@@ -266,8 +269,9 @@ def CBN(data, dataf):
 		output = predict(summarize, row)
 		predictions.append(output)
 	print(predictions)
+#Les resultats obtenus sont similaires que ceux pour TNN mais un peu moins précis
 
-#2
+#2 - Creantion de CBNE
 def CBNE(data, dataf):
     correct = 0
     summarize = summarize_by_class(data)
@@ -280,7 +284,7 @@ def CBNE(data, dataf):
             correct += 1
     return 100 - (correct / float(len(data)) * 100.0)
 
-#3
+#3 - Utilisation de GaussianNB
 X, y = load_iris(return_X_y=True)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
 gnb = GaussianNB()
@@ -291,43 +295,8 @@ print((X_test.shape[0], (y_test != y_pred).sum()))
 APRES MES TESTS, J'AI RAJOUTE LA PRECISION AFIN DE MIEUX COMPRENDRE L'ALGORITHME ET D'EFFECTUER DES RECHERCHES COMPLEMENTAIRES 
 
 Apres plusieurs recherches et tests nous nous rendons compte que les resultats obtenus sont similaires 
-bien que les métohdes de classifications sont légèrements différentes
+bien que les métohdes de classifications soient légèrements différentes
 """
 
-#BONUS
-# Calculer la fonction de distribution de probabilité gaussienne pour x
-def calculate_probabilityG(x, mean, stdev):
-	exponent = exp(-((x-mean)**2 / (2 * stdev**2 )))
-	return (1 / (sqrt(2 * pi) * stdev)) * exponent
-
-# les probabilités de prédire chaque classe pour une ligne donnée
-def calculate_class_probabilitiesG(summaries, row):
-	total_rows = sum([summaries[label][0][2] for label in summaries])
-	probabilities = dict()
-	for class_value, class_summaries in summaries.items():
-		probabilities[class_value] = summaries[class_value][0][2]/float(total_rows)
-		for i in range(len(class_summaries)):
-			mean, stdev, _ = class_summaries[i]
-			probabilities[class_value] *= calculate_probabilityG(row[i], mean, stdev)
-	return probabilities
-
-# Prediction de la class pour une rangé donnée
-def predictG(summaries, row):
-	probabilities = calculate_class_probabilitiesG(summaries, row)
-	best_label, best_prob = None, -1
-	for class_value, probability in probabilities.items():
-		if best_label is None or probability > best_prob:
-			best_prob = probability
-			best_label = class_value
-	return best_label
-
-#Algorithme Naive sans l'utilisation de GaussianNB() 
-def CBNG(data, dataf):
-	summarize = summarize_by_class(data)
-	predictions = list()
-	for row in dataf:
-		output = predictG(summarize, row)
-		predictions.append(output)
-	print(predictions)
 
 
